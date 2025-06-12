@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--
+hg-engine.ihtml
+
+main page.  has all of the landing page functionality.
+-->
+<html>
+    <link href='https://fonts.googleapis.com/css?family=Courier%20Prime' rel='stylesheet'>
+    <head>
+        <title>NDS Code Injection</title>
+        <meta name="viewport"
+              content="width=device-width,
+                       initial-scale=1.0">
+    </head>
+
+<!DOCTYPE html>
+<!--
+style.ihtml
+
+typical styling on the website...  i'm probably just going to keep adding to this as i go
+-->
+    <style>
+    header {
+        text-align: center;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        color: white;
+        font-family: 'Courier Prime';font-size: 22px
+    }
+    body {
+        text-align: center;
+        padding: 3px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 18px
+    }
+    body_text {
+        text-align: left;
+        padding: 3px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 18px
+    }
+    .code-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .code-tile {
+        text-align: left;
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(64, 64, 64);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    code {
+        background-color: rgb(64, 64, 64);
+    }
+    .tiles-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .tile {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.1s ease-in-out;
+        padding: 3px;
+    }
+    .tile:hover {
+        transform: scale(1.02);
+    }
+    .tile-no-transition {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    footer {
+        text-align: center;
+        padding: 3px;
+        background-color: rgb(32, 32, 32);
+        color: white;
+        font-family: 'Courier Prime';font-size: 14px
+    }
+    </style>
+
+    <header>
+        <p>NDS Code Injection</p>
+    </header>
+
+    <body>
+        <p><a href="index.html" style="color: rgb(184, 184, 184)">Back to Home</a><br>
+        <a href="hg-engine.html" style="color: rgb(184, 184, 184)">Back to hg-engine</a></p>
+    </body>
+
+<!--
+end header
+-->
+
+    <body>
+        <p>The code injection framework is a means of taking control over the program flow and running injected code.<br>
+        This allows us to effectively change the code without requiring a complete source code, instead allowing us to just edit what we need.</p>
+
+        <p>When you know the assembly, you already have the source code.</p>
+
+        <p></p>
+
+        <section class="tiles-container">
+            <div class="tile-no-transition">
+            <p>Goal</p>
+                <p>
+                    The goal of the code injection framework is to modify an ARM binary in an easy way to repoint to our own code.<br>
+                    There are some very basic methods to steal the control flow based on patterns in the generated assembly.<br>
+                    <br>
+                    Function pointers are relevant when a table of function pointers is used, like where a set of commands map to their own functions.<br>
+                    For this, replacing the function pointer is enough to steal control flow.<br>
+                    <br>
+                    Repoints are relevant when a table is used and all that's desired is different elements in that table.<br>
+                    This is particularly when the desire is to expand the table beyond its initial memory scope.<br>
+                    <br>
+                    Hooks are a more invasive method of directly inserting code that jumps to a different location.<br>
+                    This involves manually overwriting code to jump to a different location with code that we manage.<br>
+                    <br>
+                </p>
+            <p>Hook Methodology</p>
+                <p>
+                    There are two hook constructs used by hg-engine: register-specific long jumps and full function replacements.<br>
+                    The register-specific jump is simple:<br>
+<div class="code-container"><div class="code-tile"><pre><code>ldr rN, =SymbolToJump
+bx rN
+.pool
+</code></pre></div></div>
+                    Compiled to THUMB, this takes 8 bytes (or 10 depending on the instruction).<br>
+                    N is a register from 0-7 inclusive (as limited by THUMB).<br>
+                    This allows us to jump directly to a different address, and the code this compiles to is simple:
+<div class="code-container"><div class="code-tile"><pre><code>00 48 - ldr r0, [pc, #0]
+00 47 - bx r0
+EF BE AD DE - 0xDEADBEEF little endian</code></pre></div></div>
+                    With different registers and at an address that is not word-aligned, this comes out to something like...
+<div class="code-container"><div class="code-tile"><pre><code>01 4B - ldr r0, [pc, #2]
+18 47 - bx r3
+00 00 - alignment because 0xDEADBEEF is not word aligned
+EF BE AD DE - 0xDEADBEEF little endian</code></pre></div></div>
+                    This generalizes to a series of bytes with target memory offset <code>ADDRESS</code> like so:
+<div class="code-container"><div class="code-tile"><pre><code>((ADDRESS & 0x3) != 0, (48 | register), (register << 3), 47, [00, 00,] (LE)ADDRESS</code></pre></div></div>
+                    This works well when there is a free register that is not being used,<br>
+                    like on return from a previous function call.<br>
+                    This is not always guaranteed, however...<br>
+                    <br>
+                    Not infrequently, a function has more than 3 arguments.<br>
+                    Per ARM standard, this means then that <i>no registers are free</i> at the start of these functions.<br>
+                    This is a nightmare for situations where you want to replace entire functions.<br>
+                    I developed a second snippet to take care of this that's a little more in-depth.<br>
+                    <br>
+                </p>
+            <p>Preservation</p>
+                <p>
+                    This second snippet has a big requirement: It must maintain the values of all of the registers.
+                    The obvious solution would be to turn to the stack at this point.
+                    The stack would allow storage of a value temporarily as long as it is retrieved and realigned everything once control of the program flow is returned to the original ROM.
+                    However, the ARM standard throws a bone in the plans by stipulating that functions with 5 or more arguments throw their later arguments onto the stack.
+                    This adds that requirement to our second type of hook:  complete stack preservation.<br>
+                    <br>
+                    The only way to achieve this becomes clear:  usage of the branch with link (<code>bl</code>) instruction.  This is an instruction that only modifies one register: the link register.
+                    The link register is kept in order to track program flow and return to the caller of the function once the function is finished.<br>
+                    <br>
+                    In order to achieve this and keep the link register, there needs to be some location that we can store the value of the link register for preservation overall.
+                    hg-engine then takes advantage of a quirk of the NDS that isn't present in its predecessor, the GBA:  the ROM is not mapped to executable space.
+                    Code needs to be dumped to the EWRAM in order to run it at every instance.<br>
+                    <br>
+                    What this lets us do is actually just store the link register directly alongside the executable code that we are modifying at runtime for safe restoration.
+                    This can even account for recursion if all of the recursion is done outside of the original ROM code at all, so we do not have to worry about that.
+                    This snippet looks something like this:
+<div class="code-container"><div class="code-tile"><pre><code>push {r5-r6}
+ldr r5, =lrStorageSpace
+mov r6, lr
+str r6, [r5]
+pop {r5-r6}
+bl SymbolToJump
+ldr r1, =lrStorageSpace
+ldr r1, [r1]
+mov pc, r1
+
+.pool
+
+lrStorageSpace:
+.word 0
+</code></pre></div></div>After much <a href="https://github.com/BluRosie/hg-engine/blob/main/documentation/testing_hook.s" style="color: rgb(184, 184, 184)">trial and error</a>
+                    that could have been spent just browsing through some ARMv5 standard to figure out the same meaning, the bytes that this assembles to can be documented.
+                    <code>bl</code> as an instruction does a lot more than the other instructions behind the scenes--in fact, it is actually 2 instructions even in THUMB that
+                    calculate a high half of the target instruction and a low half of the target instruction.<br>
+                    <br>
+                    I initially had a very vague idea about a supposed limit on instructions that could be skipped over in THUMB that would be problematic for implementation, but had
+                    to resort to implementation attempts in order to verify if it would be problematic.<br>
+                    So I had to discern how the assembler output the instructions so that they could be manually constructed for automated insertion.
+                    The immediate two instructions turned out to be <code>F000 F800</code> in that order.
+                    The combination of the two instructions encodes how many bytes are to be skipped over.  The remaining 11 bits of each instruction stored half of the 22 bit total.
+                    The actual value of bytes is double of what is specified in the instruction (because there is no use in specifying a byte-aligned address to jump to), allowing for a total range of 2^23 bytes that are possible to skip.
+                    To allow both forward and backward jumping, this is a 2's complement signed integer.
+                    This then allows for a total range of bytes of -0x400000 - +0x3FFFFE.  Given that the NDS has exactly 4 MB of EWRAM, this completely covers every bit of code editing for our purposes.<br>
+                    This also requires 0x1C bytes compared to the other method's 0x8, but maintains the registers and stack just fine.<br>
+                    <br>
+                </p>
+            <p>Automation</p>
+                <p>
+                    What is now present is the idea behind all of the hook insertions.  There should now be a method that can be used to easily specify the hooks such that a script can automate their placement in the binaries.
+                    In order to get this, we need to get a dump of the symbols in the objects that we create and where they have been assembled to--their memory addresses.
+                    Per <a href="https://pokehacking.com/tutorials/ramexpansion/" style="color: rgb(184, 184, 184)">research done by a fellow community member Mikelan98</a>, the NDS Pokémon games actually
+                    have a quite large region of memory that by and large goes unused in gameplay at 0x023C8000 through the end of the EWRAM.  This allows us a region of memory with which we can store all of our generated code.<br>
+                    <br>
+                    The NDS introduced an overlay system with which code can be inserted into the game with individual binaries and selectively loaded at runtime.
+                    This code is position-dependent unlike other REL files from i.e. N64 or DLL files, but we forgive Nintendo for their early embedded systems explorations.
+                    Our code can directly be added as a new overlay and loaded in using the built-in system when the game starts to give us a permanent code expansion.
+                    The format decided on was simple:
+<div class="code-container"><div class="code-tile"><pre><code>overlayNum symbolName addressToJumpFrom [usedRegister]
+for example...
+arm9 CreateBoxMonData 0206DED0
+0012 CheckCanTakeItem 02241334 0</code></pre></div></div>Here, <code>CreateBoxMonData</code> is jumped to from the memory address 0x0206DED0 in the ARM9 using the second hook that maintains registers and stack.<br>
+                    <code>CheckCanTakeItem</code> is jumped to from the memory address 0x02241334 in overlay 12 using r0 to get there, cobbling r0 in the process with the destination address.<br>
+                    These addresses and symbols are easily obtained using nm on the output of as chained into ld to generate a linked object file.<br>
+                    A <a href="https://github.com/BluRosie/hg-engine/blob/main/scripts/make.py" style="color: rgb(184, 184, 184)">Python script</a> was then made to go through and parse these.  Further similar formats were made for <a href="https://github.com/BluRosie/hg-engine/blob/main/repoints" style="color: rgb(184, 184, 184)">table repoints</a>,
+                    <a href="https://github.com/BluRosie/hg-engine/blob/main/routinepointers" style="color: rgb(184, 184, 184)">function pointers</a>, and even <a href="https://github.com/BluRosie/hg-engine/blob/main/bytereplacement" style="color: rgb(184, 184, 184)">raw byte replacements</a> as detailed at the beginning.
+                    Keen observers may even notice that the register-specific hooks are duplicated for ARM functions, of which there are not many in HeartGold.<br>
+                    The overlay system can even be abused more to selectively load code and extend the usability of this roughly 96 kB far beyond the initial scope.  That is a subject for a different article though.<br>
+                    <br>
+                    Overall, I am satisfied with the result.<br>
+                </p>
+            </div>
+        </section>
+    </body>
+
+<!--
+Used here as a spacer before the footer.
+-->
+    <body>
+        <p></p>
+    </body>
+
+<!DOCTYPE html>
+<!--
+footer.ihtml
+
+bottom of the content on the website
+-->
+    <footer>
+        <p>
+            Nate Wichers<br>
+            Electrical Engineer doing Embedded Software, GE Aerospace<br>
+            <p>Views expressed are my own--any employer that I may have at any given time should not be associated with my own thoughts and opinions as expressed here.</p>
+            <a href="https://github.com/BluRosie" style="color: rgb(184, 184, 184)"><b>GitHub</b></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="https://twitter.com/bluroseai" style="color: rgb(184, 184, 184)"><b>Twitter (currently X)</b></a>
+        </p>
+        <p>
+            <a href="mailto:ncwicher@mtu.edu" style="color: rgb(184, 184, 184)"><b>ncwicher@mtu.edu</b></a>
+        </p>
+    </footer>
+
+</html>

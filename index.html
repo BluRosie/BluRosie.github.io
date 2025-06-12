@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+index.ihtml
+
+main page.  has all of the landing page functionality.
+-->
 <html>
     <link href='https://fonts.googleapis.com/css?family=Courier%20Prime' rel='stylesheet'>
     <head>
@@ -10,14 +15,14 @@
 
 <!DOCTYPE html>
 <!--
-style.html
+style.ihtml
 
 typical styling on the website...  i'm probably just going to keep adding to this as i go
 -->
     <style>
     header {
         text-align: center;
-        padding: 1px;
+        padding: 5px;
         border-radius: 5px;
         background-color: rgb(96, 96, 96);
         color: white;
@@ -30,10 +35,35 @@ typical styling on the website...  i'm probably just going to keep adding to thi
         color: white;
         font-family: 'Courier Prime';font-size: 18px
     }
+    body_text {
+        text-align: left;
+        padding: 3px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 18px
+    }
+    .code-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .code-tile {
+        text-align: left;
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(64, 64, 64);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    code {
+        background-color: rgb(64, 64, 64);
+    }
     .tiles-container {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+        padding: 3px;
     }
     .tile {
         flex: 1 0 300px;
@@ -41,9 +71,17 @@ typical styling on the website...  i'm probably just going to keep adding to thi
         background-color: rgb(96, 96, 96);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: transform 0.1s ease-in-out;
+        padding: 3px;
     }
     .tile:hover {
         transform: scale(1.02);
+    }
+    .tile-no-transition {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
     }
     footer {
         text-align: center;
@@ -70,7 +108,7 @@ I do not believe in a separate css file.
         <p>Views expressed are my own--any employer that I may have at any given time should not be associated with my own thoughts and opinions as expressed here.</p>
 
         <header>
-            <p>History</p>
+            <p>Professional History</p>
         </header>
 
 <!--
@@ -81,7 +119,7 @@ Used here as a spacer.
         </body>
 
         <section class="tiles-container">
-            <div class="tile"><a href="https://www.somero.com/products/srs-4e-electric-laser-screed/" style="text-decoration: none; color: white;">
+            <div class="tile"><a href="https://www.gsengineering.com/" style="text-decoration: none; color: white;">
                 <h2>GS Engineering</h2>
                 <p>
                     I gained professional experience working as a contracted engineering for various clients, largely the DoD.
@@ -90,7 +128,7 @@ Used here as a spacer.
                 </p>
             </a></div>
 
-            <div class="tile">
+            <div class="tile"><a href="https://www.somero.com/" style="text-decoration: none; color: white;">
                 <h2>Somero Enterprises</h2>
                 <p>
                     Somero Enterprises saw the experience I had with ruggedized vehicles and 
@@ -99,21 +137,67 @@ Used here as a spacer.
                     the machine as <a href="https://www.somero.com/products/srs-4e-electric-laser-screed/" style="color: rgb(184, 184, 184)"><b>the SRS-4e</b></a>,
                     primarily popular with sales in Europe.
                 </p>
-            </div>
+            </a></div>
 
-            <div class="tile">
+            <div class="tile"><a href="https://chentan.github.io/about-group.html" style="text-decoration: none; color: white;">
                 <h2>Michigan Tech</h2>
                 <p>
                     My alma mater hired me back as a funded student for a semester for my Masters, during which time I worked on creating a bipedal robot.
                     My predecessors left me a robot that could not move.  I left them a moving robot that needed a control system programmed for it after the 6 months I worked on it.
                 </p>
-            </div>
+            </a></div>
 
-            <div class="tile">
+            <div class="tile"><a href="https://www.geaerospace.com/" style="text-decoration: none; color: white;">
                 <h2>GE Aerospace</h2>
                 <p>
                     I recently started here!  This is a massive career pivot to embedded software in an effort to better match my
-					passions in life.  I will be working on a lot of C programming for microcontrollers here.
+                    passions in life.  I will be working on a lot of C programming for microcontrollers here.
+                </p>
+            </a></div>
+        </section>
+    </body>
+
+<!--
+Used here as a spacer before the footer.
+-->
+    <body>
+        <p></p>
+    </body>
+
+    <header>
+        <p>Hobbies</p>
+    </header>
+
+    <body>
+        <p></p>
+    </body>
+
+    <body>
+        <section class="tiles-container">
+            <div class="tile"><a href="hg-engine.html" style="text-decoration: none; color: white;">
+                <h2>hg-engine</h2>
+                <p>
+                    hg-engine is the ultimate battle engine for Pokémon HeartGold, aiming to backport all future creatures, moves, abilities, etc. from future generations to
+                    the Nintendo DS.  It is an automated C Injection repository, editing the ARM binaries by parsing formatted text scripts to construct branches to the code
+                    that is inserted additionally into the ROM that implements additional functionality.
+                </p>
+            </a></div>
+
+            <div class="tile">
+                <h2>Pokémon FireGold</h2>
+                <p>
+                    This project is a port of Pokémon Crystal to the GameBoy Advance with some touchups and extra events to spice up the gameplay.
+                    I contributed a bunch of code to the project in a similar C Injection fashion to hg-engine, manually examining the ARM ROM that
+                    is Pokémon FireRed and inserting code to add functionality and graphics.
+                </p>
+            </div>
+
+            <div class="tile">
+                <h2>This Website</h2>
+                <p>
+                    The website is an under-construction endeavor that I am using to teach myself HTML and establish a workflow.
+                    I refuse to write any JavaScript in its development.  And while this is a handicap I'm sure will make some things difficult,
+                    it aligns with my philosophy that abstractions tend to obfuscate understanding.
                 </p>
             </div>
         </section>
@@ -122,13 +206,13 @@ Used here as a spacer.
 <!--
 Used here as a spacer before the footer.
 -->
-        <body>
-            <p></p>
-        </body>
+    <body>
+        <p></p>
+    </body>
 
 <!DOCTYPE html>
 <!--
-footer.html
+footer.ihtml
 
 bottom of the content on the website
 -->

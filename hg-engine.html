@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+hg-engine.ihtml
+
+main page.  has all of the landing page functionality.
+-->
+<html>
+    <link href='https://fonts.googleapis.com/css?family=Courier%20Prime' rel='stylesheet'>
+    <head>
+        <title>hg-engine</title>
+        <meta name="viewport"
+              content="width=device-width,
+                       initial-scale=1.0">
+    </head>
+
+<!DOCTYPE html>
+<!--
+style.ihtml
+
+typical styling on the website...  i'm probably just going to keep adding to this as i go
+-->
+    <style>
+    header {
+        text-align: center;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        color: white;
+        font-family: 'Courier Prime';font-size: 22px
+    }
+    body {
+        text-align: center;
+        padding: 3px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 18px
+    }
+    body_text {
+        text-align: left;
+        padding: 3px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 18px
+    }
+    .code-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .code-tile {
+        text-align: left;
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(64, 64, 64);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    code {
+        background-color: rgb(64, 64, 64);
+    }
+    .tiles-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .tile {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.1s ease-in-out;
+        padding: 3px;
+    }
+    .tile:hover {
+        transform: scale(1.02);
+    }
+    .tile-no-transition {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    footer {
+        text-align: center;
+        padding: 3px;
+        background-color: rgb(32, 32, 32);
+        color: white;
+        font-family: 'Courier Prime';font-size: 14px
+    }
+    </style>
+
+    <header>
+        <p>hg-engine</p>
+    </header>
+
+    <body>
+        <p><a href="index.html" style="color: rgb(184, 184, 184)">Back to Home</p>
+    </body>
+
+<!--
+end header
+-->
+
+    <body>
+        <p><a href="https://github.com/BluRosie/hg-engine" style="color: rgb(184, 184, 184)">hg-engine</a> is a comprehensive engine upgrade for Pokémon HeartGold.<br>
+        It aims to implement features that have come since the release of the Nintendo DS in future generations, from Pokémon Black and White all the way through Scarlet and Violet.</p>
+        
+        <p>This involves brand new Pokémon, abilities, moves, and miscellaneous new mechanics.</p>
+
+        <body>
+            <p></p>
+        </body>
+
+        <section class="tiles-container">
+            <div class="tile"><a href="code_injection_nds.html" style="text-decoration: none; color: white;">
+                <h2>Code Injection Framework</h2>
+                <p>
+                    hg-engine is powered by a code injection framework that parses a text file to insert hooks into the ARM binaries and take control of program flow.
+                </p>
+            </a></div>
+        </section>
+    </body>
+
+<!--
+Used here as a spacer before the footer.
+-->
+    <body>
+        <p></p>
+    </body>
+
+<!DOCTYPE html>
+<!--
+footer.ihtml
+
+bottom of the content on the website
+-->
+    <footer>
+        <p>
+            Nate Wichers<br>
+            Electrical Engineer doing Embedded Software, GE Aerospace<br>
+            <p>Views expressed are my own--any employer that I may have at any given time should not be associated with my own thoughts and opinions as expressed here.</p>
+            <a href="https://github.com/BluRosie" style="color: rgb(184, 184, 184)"><b>GitHub</b></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="https://twitter.com/bluroseai" style="color: rgb(184, 184, 184)"><b>Twitter (currently X)</b></a>
+        </p>
+        <p>
+            <a href="mailto:ncwicher@mtu.edu" style="color: rgb(184, 184, 184)"><b>ncwicher@mtu.edu</b></a>
+        </p>
+    </footer>
+
+</html>
