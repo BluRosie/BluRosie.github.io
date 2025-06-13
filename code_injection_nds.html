@@ -115,7 +115,7 @@ end header
 
         <section class="tiles-container">
             <div class="tile-no-transition">
-            <p>Goal</p>
+            <h2>Goal</h2>
                 <p>
                     The goal of the code injection framework is to modify an ARM binary in an easy way to repoint to our own code.<br>
                     There are some very basic methods to steal the control flow based on patterns in the generated assembly.<br>
@@ -130,7 +130,7 @@ end header
                     This involves manually overwriting code to jump to a different location with code that we manage.<br>
                     <br>
                 </p>
-            <p>Hook Methodology</p>
+            <h2>Hook Methodology</h2>
                 <p>
                     There are two hook constructs used by hg-engine: register-specific long jumps and full function replacements.<br>
                     The register-specific jump is simple:<br>
@@ -150,7 +150,12 @@ EF BE AD DE - 0xDEADBEEF little endian</code></pre></div></div>
 00 00 - alignment because 0xDEADBEEF is not word aligned
 EF BE AD DE - 0xDEADBEEF little endian</code></pre></div></div>
                     This generalizes to a series of bytes with target memory offset <code>ADDRESS</code> like so:
-<div class="code-container"><div class="code-tile"><pre><code>((ADDRESS & 0x3) != 0, (48 | register), (register << 3), 47, [00, 00,] (LE)ADDRESS</code></pre></div></div>
+<div class="code-container"><div class="code-tile"><pre><code>((ADDRESS & 0x3) != 0,
+(48 | register),
+(register << 3),
+47, 
+[00, 00,] 
+(LE)ADDRESS</code></pre></div></div>
                     This works well when there is a free register that is not being used,<br>
                     like on return from a previous function call.<br>
                     This is not always guaranteed, however...<br>
@@ -161,7 +166,7 @@ EF BE AD DE - 0xDEADBEEF little endian</code></pre></div></div>
                     I developed a second snippet to take care of this that's a little more in-depth.<br>
                     <br>
                 </p>
-            <p>Preservation</p>
+            <h2>Preservation</h2>
                 <p>
                     This second snippet has a big requirement: It must maintain the values of all of the registers.
                     The obvious solution would be to turn to the stack at this point.
@@ -209,7 +214,7 @@ lrStorageSpace:
                     This also requires 0x1C bytes compared to the other method's 0x8, but maintains the registers and stack just fine.<br>
                     <br>
                 </p>
-            <p>Automation</p>
+            <h2>Automation</h2>
                 <p>
                     What is now present is the idea behind all of the hook insertions.  There should now be a method that can be used to easily specify the hooks such that a script can automate their placement in the binaries.
                     In order to get this, we need to get a dump of the symbols in the objects that we create and where they have been assembled to--their memory addresses.
