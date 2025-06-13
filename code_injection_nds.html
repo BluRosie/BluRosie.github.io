@@ -58,6 +58,13 @@ typical styling on the website...  i'm probably just going to keep adding to thi
     }
     code {
         background-color: rgb(64, 64, 64);
+        flex: 1 0 300px;
+        word-break: break-all;
+    }
+    pre {
+        background-color: rgb(64, 64, 64);
+        flex: 1 0 300px;
+        text-wrap: wrap;
     }
     .tiles-container {
         display: flex;
@@ -150,12 +157,7 @@ EF BE AD DE - 0xDEADBEEF little endian</code></pre></div></div>
 00 00 - alignment because 0xDEADBEEF is not word aligned
 EF BE AD DE - 0xDEADBEEF little endian</code></pre></div></div>
                     This generalizes to a series of bytes with target memory offset <code>ADDRESS</code> like so:
-<div class="code-container"><div class="code-tile"><pre><code>((ADDRESS & 0x3) != 0,
-(48 | register),
-(register << 3),
-47, 
-[00, 00,] 
-(LE)ADDRESS</code></pre></div></div>
+<div class="code-container"><div class="code-tile"><pre><code>((ADDRESS & 0x3) != 0, (48 | register), (register << 3), 47, [00, 00,] (LE)ADDRESS</code></pre></div></div>
                     This works well when there is a free register that is not being used,<br>
                     like on return from a previous function call.<br>
                     This is not always guaranteed, however...<br>
