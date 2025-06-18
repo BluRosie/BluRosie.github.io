@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!--
+hg-engine.ihtml
+
+main page.  has all of the landing page functionality.
+-->
+<html>
+<!DOCTYPE html>
+<!--
+font.ihtml
+
+literally just the stylesheet and font that are to be used for the website
+-->
+    <link href='https://fonts.googleapis.com/css?family=Courier%20Prime' rel='stylesheet'>
+    <head>
+        <title>HTML Include Functionality</title>
+        <meta name="viewport"
+              content="width=device-width,
+                       initial-scale=1.0">
+    </head>
+
+<!DOCTYPE html>
+<!--
+style.ihtml
+
+typical styling on the website...  i'm probably just going to keep adding to this as i go
+-->
+    <style>
+    header {
+        text-align: center;
+        width: 71%;
+        margin: auto;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        color: white;
+        font-family: 'Courier Prime';font-size: 22px;
+    }
+    body {
+        text-align: center;
+        width: 71%;
+        margin: auto;
+        padding: 5px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 15px;
+    }
+    body_text {
+        text-align: left;
+        width: 71%;
+        margin: auto;
+        padding: 5px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 15px;
+    }
+    .code-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .code-tile {
+        text-align: left;
+        width: 71%;
+        margin: auto;
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(32, 32, 32);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    code {
+        background-color: rgb(32, 32, 32);
+        border-radius: 3px;
+        padding: 2px;
+        flex: 1 0 300px;
+        word-break: break-all;
+    }
+    pre {
+        background-color: rgb(32, 32, 32);
+        flex: 1 0 300px;
+        text-wrap: wrap;
+    }
+    .tiles-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .tile {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.1s ease-in-out;
+        padding: 3px;
+    }
+    .tile:hover {
+        transform: scale(1.02);
+    }
+    .tile-no-transition {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    footer {
+        text-align: center;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: rgb(32, 32, 32);
+        color: white;
+        font-family: 'Courier Prime';font-size: 14px;
+    }
+    </style>
+
+    <header>
+        <p>HTML Include Functionality</p>
+    </header>
+
+    <body>
+        <p><a href="index.html" style="color: rgb(184, 184, 184)">Back to Home</a><br>
+        <a href="this_website.html" style="color: rgb(184, 184, 184)">Back to This Website</a></p>
+    </body>
+
+<!--
+end header
+-->
+
+    <body>
+        <p>HTML would have you repeat several elements across webpages if it were completely up to it itself.<br>
+        This is probably one of the big reasons that any abstractions have been made, and web development is riddled with frameworks.</p>
+
+        <p>I will never learn JavaScript.</p>
+
+        <p></p>
+
+        <section class="tiles-container">
+            <div class="tile-no-transition">
+                <p>
+                <h2>Include Handling</h2>
+                    A big first challenge with making a multi-page website was the idea of a consistent footer across all of the websites.<br>
+                    What if I want to edit this in the future?  Would I have to go through every single webpage and edit each instance?<br>
+                    <br>
+                    This is obviously unacceptable.<br>
+                    However, HTML explicitly doesn't support this--it's not made to be anything that supports this sort of runtime replacement.<br>
+                    You can not "call" a webpage to duplicate the element across individual pages using pure HTML, per <a href="https://www.reddit.com/r/webdev/comments/ujc716/can_you_call_another_html_file_within_an_html_file/" style="color: rgb(184, 184, 184)">u/udubdavid</a>.
+                    My solution is to instead start introducing additional functionality to pure HTML in a sort of compile-time source file replacement.
+                    The initial requirement will be to introduce include functionality that directly enumerates the contents of a file in the built file, replacing the directive's line.<br>
+                    <br>
+                    The compile-time "directive" is arbitrary.  I personally like C.  I'll start off by using <code>#​#include fileNameHere</code>.  At a later date this may be corrected to something else should it be necessary.<br>
+                    Without a desire to create a brand new Python script that will do this for me, I'm instead staring down the idea of doing all of this in a shell script.  This is fine--it can be scaled with a shell script through the nice Makefile enumerations.<br>
+                    The goal is to take 2 raw files and expand the included one inside of the including one.<br>
+                    Turns out that this isn't as easy as one may think.  Text replacement schemes in shell scripts are few and far in between.
+                    These are largely their own scripts provided here as CLI arguments to individual files.
+                    I will be using `awk` to do this, and feel it necessary to state that it is GNU's implementation if there are portability problems with i.e. Mac.
+                    This is all mostly being worked on from a Rocky Linux VM on a Windows environment.
+                    I've run into some things like that with specifically `sed` vs. `gsed` on Mac systems.<br>
+                    <br>
+                    So the goal would be to turn <code>#​#include include/footer.ihtml</code> from the source file into the contents of <code>include/footer.ihtml</code> in the output...
+<div class="code-container"><div class="code-tile"><pre><code>< contents of include/footer.ihtml >:
+<​!DOCTYPE html>
+<​!--
+footer.ihtml
+
+bottom of the content on the website
+-->
+    <​footer>
+        <​p>
+            Nate Wichers<​br>
+            Electrical Engineer doing Embedded Software, GE Aerospace<​br>
+            <​p>Views expressed are my own--any employer that I may have at any given time should not be associated with my own thoughts and opinions as expressed here.<​/p>
+            <​a href="https://github.com/BluRosie" style="color: rgb(184, 184, 184)"><​b>GitHub<​/b><​/a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <​a href="https://twitter.com/bluroseai" style="color: rgb(184, 184, 184)"><​b>Twitter (currently X)<​/b><​/a>
+        <​/p>
+        <​p>
+            <​a href="mailto:ncwicher@mtu.edu" style="color: rgb(184, 184, 184)"><​b>ncwicher@mtu.edu<​/b><​/a>
+        <​/p>
+    <​/footer></code></pre></div></div>This way the footer gets copied into wherever it needs to be.<br>
+                <h2>Initial Commands</h2>
+                    The way that finally worked for me to do this was this nice command:<br>
+<div class="code-container"><div class="code-tile"><pre><code>awk '/#​#include include\/footer.ihtml/{while((getline<"'include/footer.ihtml'") > 0){print};next}{print}' index.html > output.html</code></pre></div></div>
+                    The command passes a script to <code>awk</code> essentially has an outer loop that prints each line of <code>index.html</code>.<br>
+                    However, when the specific line is encountered, it enters the inner loop where it prints every line from the included file.<br>
+                    But now we want to process multiple different includes!  This requires an intermediate file and would look something like this:
+<div class="code-container"><div class="code-tile"><pre><code>cp -f index.ihtml output.html
+for file in $(grep "#​#include" index.ihtml | sed -e "s+#​#include ++g"); do
+    awk '/#​#include '$file'/{while((getline<"'$file'") > 0){print};next}{print}' output.html > intermed.html;
+    mv -f intermed.html output.html
+done</code></pre></div></div>
+                    The <code>grep</code> command just finds all of the #​#include lines in the file and essentially generates a list of the files that are to be included.
+                    Note that I had to include the <code>\</code> in front of the <code>/</code>, but only for the first filename to escape the <code>awk</code> script.<br>
+                    <br>
+                    But we forgot to handle the escape character for the special <code>awk</code> character '/'.<br>
+                    That makes the code look something like this:
+<div class="code-container"><div class="code-tile"><pre><code>cp -f index.ihtml output.html
+for file in $(grep "#​#include" index.ihtml | sed -e "s+#​#include ++g"); do
+    awk '/#​#include '<a style="color: rgb(56, 152, 56)">$(echo $file | sed -e 's|/|\\/|g')</a>'/{while((getline<"'$file'") > 0){print};next}{print}' output.html > intermed.html;
+    mv -f intermed.html output.html
+done</code></pre></div></div>
+                <h2>Putting into a Makefile</h2>
+                    Finally it is possible to make a Makefile rule.<br>
+                    Because each output file has its own set of includes, we have to make a rule that defines each of the individual files as an output.<br>
+                    This is where you find out that inside of a rule, a single <code>$</code> passed to the shell actually needs to be <code>$$$$</code> instead of the typical 2. I still can not find any documentation that states this, but found it out before digging in too deeply.
+<div class="code-container"><div class="code-tile"><pre><code>SOURCE_DOCS := $(wildcard *.ihtml)
+BUILD := build
+ARTEFACTS := $(patsubst %.ihtml,$(BUILD)/%.html, $(SOURCE_DOCS))
+
+all: $(ARTEFACTS)
+
+define INDIVIDUAL_OUTPUT_DEFINE
+
+$(BUILD)/$2: $1 $(shell grep "#​#include" $1 | sed -e "s+#​#include ++g")
+	cp -f $1 $(BUILD)/$2
+	for file in $(shell grep "#​#include" $1 | sed -e "s+#​#include ++g"); do \
+		awk '/#​#include '$$$$(echo $$$$file | sed -e 's|/|\\/|g')'/{while((getline<"'$$$$file'") > 0){print};next}{print}' $(BUILD)/$2 > intermed.html; \
+		mv intermed.html $(BUILD)/$2; \
+	done
+
+endef
+$(foreach source, $(SOURCE_DOCS), $(eval $(call INDIVIDUAL_OUTPUT_DEFINE,$(source),$(subst ihtml,html,$(source)))))</code></pre></div></div>
+                    Now I can separate out individual font files and the entire footer file.
+                    Soon I'll even have a menu or something that will be easy to include in every header because of this system.<br>
+                    And whenever I want to make changes across every page, I just have to run a quick <code>make</code> and redeploy the website.<br>
+                    <br>
+                <h2>Bonus</h2>
+                    All of the embedded HTML and the "#​#include" string not triggering the <code>grep</code>/<code>sed</code> commands is accomplished with a zero-width space character splitting up the tags as necessary!<br>
+                    <br>
+                    A very nice Makefile debugging oneliner as well:
+<div class="code-container"><div class="code-tile"><pre><code>print-% : ; $(info $($*)) @true</code></pre></div></div>
+                    This allows me to run i.e. <code>make print-ARTEFACTS</code> and get the output:
+<div class="code-container"><div class="code-tile"><pre><code>build/other-things.html build/code_injection_nds.html build/index.html build/hg-engine.html build/this-website.html build/html-include-functionality.html</code></pre></div></div>
+                </p>
+            </div>
+        </section>
+    </body>
+
+<!--
+Used here as a spacer before the footer.
+-->
+    <body>
+        <p></p>
+    </body>
+
+<!DOCTYPE html>
+<!--
+footer.ihtml
+
+bottom of the content on the website
+-->
+    <body>
+        <footer>
+            <p>
+                Nate Wichers<br>
+                Electrical Engineer doing Embedded Software, GE Aerospace<br>
+                <p>Views expressed are my own--any employer that I may have at any given time should not be associated with my own thoughts and opinions as expressed here.</p>
+                <a href="https://github.com/BluRosie" style="color: rgb(184, 184, 184)"><b>GitHub</b></a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="https://twitter.com/bluroseai" style="color: rgb(184, 184, 184)"><b>Twitter (currently X)</b></a>
+            </p>
+            <p>
+                <a href="mailto:ncwicher@mtu.edu" style="color: rgb(184, 184, 184)"><b>ncwicher@mtu.edu</b></a>
+            </p>
+        </footer>
+    </body>
+
+</html>

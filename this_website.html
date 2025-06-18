@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <!--
-hg-engine.ihtml
+other-things.ihtml
 
-main page.  has all of the landing page functionality.
+landing page for the "other things" page of the website.
 -->
 <html>
 <!DOCTYPE html>
@@ -13,7 +13,7 @@ literally just the stylesheet and font that are to be used for the website
 -->
     <link href='https://fonts.googleapis.com/css?family=Courier%20Prime' rel='stylesheet'>
     <head>
-        <title>hg-engine</title>
+        <title>This Website</title>
         <meta name="viewport"
               content="width=device-width,
                        initial-scale=1.0">
@@ -117,11 +117,11 @@ typical styling on the website...  i'm probably just going to keep adding to thi
     </style>
 
     <header>
-        <p>hg-engine</p>
+        <p>This Website</p>
     </header>
 
     <body>
-        <p><a href="index.html" style="color: rgb(184, 184, 184)">Back to Home</p>
+        <p><a href="index.html" style="color: rgb(184, 184, 184)">Back to Home</a></p>
     </body>
 
 <!--
@@ -129,20 +129,22 @@ end header
 -->
 
     <body>
-        <p><a href="https://github.com/BluRosie/hg-engine" style="color: rgb(184, 184, 184)">hg-engine</a> is a comprehensive engine upgrade for Pokémon HeartGold.<br>
-        It aims to implement features that have come since the release of the Nintendo DS in future generations, from Pokémon Black and White all the way through Scarlet and Violet.</p>
+        <p>As someone with no web experience, I am hoping to document my foray into the field here.<br>
+        My goal is to get a streamlined website that also somewhat functions as a landing page for all things me.</p>
         
-        <p>This involves brand new Pokémon, abilities, moves, and miscellaneous new mechanics.</p>
+        <p>By documenting this, I hope to both make it easier for other folks to follow the process.<br>
+        This also will eventually let me step back and observe my past behavior and how far I've come.</p>
 
         <body>
             <p></p>
         </body>
 
         <section class="tiles-container">
-            <div class="tile"><a href="code_injection_nds.html" style="text-decoration: none; color: white;">
-                <h2>Code Injection Framework</h2>
+            <div class="tile"><a href="html_include_functionality.html" style="text-decoration: none; color: white;">
+                <h2>HTML Include Functionality</h2>
                 <p>
-                    hg-engine is powered by a code injection framework that parses a text file to insert hooks into the ARM binaries and take control of program flow.
+                    As most of this website is HTML, a few things were found to be very repetitive.<br>
+                    I have incorporated include functionality and a sort of "compile" process using a Makefile to build this website from the base files.
                 </p>
             </a></div>
         </section>
