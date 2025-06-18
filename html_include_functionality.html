@@ -233,6 +233,7 @@ $(foreach source, $(SOURCE_DOCS), $(eval $(call INDIVIDUAL_OUTPUT_DEFINE,$(sourc
 <div class="code-container"><div class="code-tile"><pre><code>print-% : ; $(info $($*)) @true</code></pre></div></div>
                     This allows me to run i.e. <code>make print-ARTEFACTS</code> and get the output:
 <div class="code-container"><div class="code-tile"><pre><code>build/other-things.html build/code_injection_nds.html build/index.html build/hg-engine.html build/this-website.html build/html-include-functionality.html</code></pre></div></div>
+                    Which is immensely helpful for debugging anything that looks like arcane wizardry when it comes to the Makefile syntax.
                 </p>
             </div>
         </section>
