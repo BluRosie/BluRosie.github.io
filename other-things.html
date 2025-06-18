@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!--
+other-things.ihtml
+
+landing page for the "other things" page of the website.
+-->
+<html>
+    <link href='https://fonts.googleapis.com/css?family=Courier%20Prime' rel='stylesheet'>
+    <head>
+        <title>Other Things</title>
+        <meta name="viewport"
+              content="width=device-width,
+                       initial-scale=1.0">
+    </head>
+
+<!DOCTYPE html>
+<!--
+style.ihtml
+
+typical styling on the website...  i'm probably just going to keep adding to this as i go
+-->
+    <style>
+    header {
+        text-align: center;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        color: white;
+        font-family: 'Courier Prime';font-size: 22px
+    }
+    body {
+        text-align: center;
+        padding: 3px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 18px
+    }
+    body_text {
+        text-align: left;
+        padding: 3px;
+        background-color: rgb(64, 64, 64);
+        color: white;
+        font-family: 'Courier Prime';font-size: 18px
+    }
+    .code-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .code-tile {
+        text-align: left;
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(64, 64, 64);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    code {
+        background-color: rgb(64, 64, 64);
+        flex: 1 0 300px;
+        word-break: break-all;
+    }
+    pre {
+        background-color: rgb(64, 64, 64);
+        flex: 1 0 300px;
+        text-wrap: wrap;
+    }
+    .tiles-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 3px;
+    }
+    .tile {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.1s ease-in-out;
+        padding: 3px;
+    }
+    .tile:hover {
+        transform: scale(1.02);
+    }
+    .tile-no-transition {
+        flex: 1 0 300px;
+        border-radius: 5px;
+        background-color: rgb(96, 96, 96);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 3px;
+    }
+    footer {
+        text-align: center;
+        padding: 3px;
+        background-color: rgb(32, 32, 32);
+        color: white;
+        font-family: 'Courier Prime';font-size: 14px
+    }
+    </style>
+
+    <header>
+        <p>Other Things</p>
+    </header>
+
+    <body>
+        <p><a href="index.html" style="color: rgb(184, 184, 184)">Back to Home</a></p>
+    </body>
+
+<!--
+end header
+-->
+
+    <body>
+        <p>Occasionally I branch out of my comfort space and attempt to embrace a brand new direction.<br>
+        This mostly involves a brand new learning experience for myself as I go through the experience.</p>
+        
+        <p>I hope to help demonstrate some problem solving in this manner.</p>
+
+        <body>
+            <p></p>
+        </body>
+
+        <section class="tiles-container">
+            <div class="tile"><a href="index.html" style="text-decoration: none; color: white;">
+                <h2>Under Construction</h2>
+                <p>
+                    This section is under construction!  Will put things here soon.
+                </p>
+            </a></div>
+        </section>
+    </body>
+
+<!--
+Used here as a spacer before the footer.
+-->
+    <body>
+        <p></p>
+    </body>
+
+<!DOCTYPE html>
+<!--
+footer.ihtml
+
+bottom of the content on the website
+-->
+    <footer>
+        <p>
+            Nate Wichers<br>
+            Electrical Engineer doing Embedded Software, GE Aerospace<br>
+            <p>Views expressed are my own--any employer that I may have at any given time should not be associated with my own thoughts and opinions as expressed here.</p>
+            <a href="https://github.com/BluRosie" style="color: rgb(184, 184, 184)"><b>GitHub</b></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="https://twitter.com/bluroseai" style="color: rgb(184, 184, 184)"><b>Twitter (currently X)</b></a>
+        </p>
+        <p>
+            <a href="mailto:ncwicher@mtu.edu" style="color: rgb(184, 184, 184)"><b>ncwicher@mtu.edu</b></a>
+        </p>
+    </footer>
+
+</html>
